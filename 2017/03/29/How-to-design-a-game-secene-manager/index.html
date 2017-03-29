@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>场景设计（服务端篇）-- 上 | 游码戏路</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="如何设计一个房间
+我们从最简单的做起，先把场景认为是一个点，只有玩家，没有其他。换成现实中的场景就是一个很小的房间，玩家进入后可以看到所有东西，不需要走动。做法就是，在房间里面开辟一个空间——现实中的地面，存放玩家，玩家进来就直接进入到地面上，不会在墙上，天花板下。参考代码如下：
+12345678910111213141516typedef struct player_s &amp;#123;    in">
+<meta property="og:type" content="article">
+<meta property="og:title" content="场景设计（服务端篇）-- 上">
+<meta property="og:url" content="https://blog.codingtime.org/2017/03/29/How-to-design-a-game-secene-manager/index.html">
+<meta property="og:site_name" content="游码戏路">
+<meta property="og:description" content="如何设计一个房间
+我们从最简单的做起，先把场景认为是一个点，只有玩家，没有其他。换成现实中的场景就是一个很小的房间，玩家进入后可以看到所有东西，不需要走动。做法就是，在房间里面开辟一个空间——现实中的地面，存放玩家，玩家进来就直接进入到地面上，不会在墙上，天花板下。参考代码如下：
+12345678910111213141516typedef struct player_s &amp;#123;    in">
+<meta property="og:updated_time" content="2017-03-28T17:32:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="场景设计（服务端篇）-- 上">
+<meta name="twitter:description" content="如何设计一个房间
+我们从最简单的做起，先把场景认为是一个点，只有玩家，没有其他。换成现实中的场景就是一个很小的房间，玩家进入后可以看到所有东西，不需要走动。做法就是，在房间里面开辟一个空间——现实中的地面，存放玩家，玩家进来就直接进入到地面上，不会在墙上，天花板下。参考代码如下：
+12345678910111213141516typedef struct player_s &amp;#123;    in">
+  
+    <link rel="alternate" href="/atom.xml" title="游码戏路" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-54493429-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    
+    <div id="header-inner" class="inner">
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://blog.codingtime.org"></form>
+      </div>
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">首页</a>
+        
+          <a class="main-nav-link" href="/archives">归档</a>
+        
+          <a class="main-nav-link" href="/about">关于</a>
+        
+      </nav>
+      
+    </div>
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">游码戏路</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">coding, coding, all the time.</a>
+        </h2>
+      
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-How-to-design-a-game-secene-manager" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/03/29/How-to-design-a-game-secene-manager/" class="article-date">
+  <time datetime="2017-03-28T17:26:13.000Z" itemprop="datePublished">2017-03-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      场景设计（服务端篇）-- 上
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <!-- Table of Contents -->
+        
+        <h2 id="如何设计一个房间">如何设计一个房间</h2>
+<p>我们从最简单的做起，先把场景认为是一个点，只有玩家，没有其他。换成现实中的场景就是一个很小的房间，玩家进入后可以看到所有东西，不需要走动。做法就是，在房间里面开辟一个空间——现实中的地面，存放玩家，玩家进来就直接进入到地面上，不会在墙上，天花板下。参考代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> player_s &#123;</div><div class="line">    <span class="keyword">int32_t</span> uid;</div><div class="line">&#125; <span class="keyword">player_t</span>;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> list_s <span class="keyword">list_t</span>;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">list_t</span> <span class="keyword">player_list_t</span>;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> room_s &#123;</div><div class="line">    <span class="keyword">player_list_t</span> player_manager;</div><div class="line">&#125; <span class="keyword">room_t</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_user_enter</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_user_leave</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="keyword">player_list_t</span> room_get_all_user(<span class="keyword">room_t</span> * room);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_print_users</span><span class="params">(<span class="keyword">room_t</span> * room)</span></span>;</div></pre></td></tr></table></figure>
+<p>这样，我们实现了简单的房间，并定义了三个基本的接口，玩家进入，玩家退出，获取所有玩家。这里我们暂且用 list 来存放玩家。玩家进入的时候，通过调用 <code>room_user_enter</code> 将玩家的指针地址存放进 <code>player_manager</code>，退出的时候通过调用 <code>room_user_leave</code> 删除。同时我们定义了一个用于调试的函数 <code>room_print_users</code>，此函数简单的把当前场景的所有玩家的标示打印出来。</p>
+<p>这样，我们简单的把场景弄出来了，但是还有很多要做的。实现了进入场景，进入之后，需要告知现有玩家，有新玩家进入；需要告知新玩家，当前有哪些玩家。告知现有玩家有新玩家进入，对应的，有告知现有玩家有玩家退出。于是我们定义了三个辅助函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_enter_newcomer</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_leave_player</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_newcomer_others</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div></pre></td></tr></table></figure>
+<p>分别是告知进入新玩家；告知有玩家离开；告知新玩家当前房间有哪些玩家。</p>
+<p>游戏中，我们把玩家叫做人，但是有一种人，跟玩家虽然也像但是性质完全不同，他们不是具体的人控制，而是程序控制，我们称之为 npc。npc 跟玩家一样在房间内。为了区别于玩家，我们给了另外一个容器。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="keyword">list_t</span> <span class="keyword">npc_list_t</span>;</div></pre></td></tr></table></figure>
+<p>定义了另外一个接口，告知新进玩家，周围的 npc 信息。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_newcomer_npcs</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div></pre></td></tr></table></figure>
+<p>我们不需要告知 npc 新进了玩家，因为 npc 对玩家无所不知，只要想知道就能知道。</p>
+<p>另外我们的房间也不仅仅有 npc，还有其他各种不属于这两种的东西，但是做法是一样的，所以不再废话。</p>
+<p>OK，到目前，我们把一个房间实现的差不多了。可以进玩家，退玩家；进出玩家能通知到其他人；新进玩家可以知道各种房间内的信息。至于房间是不是有容量限制……笑，都是一个点了，还有什么限制。</p>
+<h2 id="如何管理房间">如何管理房间</h2>
+<p>我们的房间</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://blog.codingtime.org/2017/03/29/How-to-design-a-game-secene-manager/" data-id="cj0v4imru0000gfvulr048lkh" class="article-share-link">分享</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/03/29/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+           
+    <aside id="sidebar">
+  
+    
+
+  
+    
+    <div class="widget-wrap">
+    
+      <div class="widget" id="toc-widget-fixed">
+      
+        <strong class="toc-title">文章目录</strong>
+        <div class="toc-widget-list">
+              <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何设计一个房间"><span class="toc-number">1.</span> <span class="toc-text">如何设计一个房间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何管理房间"><span class="toc-number">2.</span> <span class="toc-text">如何管理房间</span></a></li></ol>
+          </div>
+      </div>
+    </div>
+
+  
+    
+
+  
+    
+  
+    
+  
+    
+
+  
+</aside>
+
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-left">
+      &copy; 2014 - 2017 Aric Xu&nbsp;|&nbsp;
+      主题 <a href="https://github.com/giscafer/hexo-theme-cafe/" target="_blank">Cafe</a>
+    </div>
+     <div id="footer-right">
+      联系方式&nbsp;|&nbsp;https://blog.codingtime.org
+    </div>
+  </div>
+</footer>
+ <script src="/jquery/jquery.min.js"></script>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">首页</a>
+  
+    <a href="/archives" class="mobile-nav-link">归档</a>
+  
+    <a href="/about" class="mobile-nav-link">关于</a>
+  
+</nav>
+    <img class="back-to-top-btn" src="/images/fly-to-top.png"/>
+<script>
+// Elevator script included on the page, already.
+window.onload = function() {
+  var elevator = new Elevator({
+    selector:'.back-to-top-btn',
+    element: document.querySelector('.back-to-top-btn'),
+    duration: 1000 // milliseconds
+  });
+}
+</script>
+    
+
+
+
+ <script src="/js/is.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/elevator.js"></script>
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
