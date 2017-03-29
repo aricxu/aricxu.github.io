@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+    
+    <entry>
+      <title><![CDATA[场景设计（服务端篇）-- 上]]></title>
+      <url>https://blog.codingtime.org/2017/03/29/How-to-design-a-game-secene-manager/</url>
+      <content type="html"><![CDATA[<h2 id="如何设计一个房间">如何设计一个房间</h2>
+<p>我们从最简单的做起，先把场景认为是一个点，只有玩家，没有其他。换成现实中的场景就是一个很小的房间，玩家进入后可以看到所有东西，不需要走动。做法就是，在房间里面开辟一个空间——现实中的地面，存放玩家，玩家进来就直接进入到地面上，不会在墙上，天花板下。参考代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> player_s &#123;</div><div class="line">    <span class="keyword">int32_t</span> uid;</div><div class="line">&#125; <span class="keyword">player_t</span>;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> list_s <span class="keyword">list_t</span>;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">list_t</span> <span class="keyword">player_list_t</span>;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> room_s &#123;</div><div class="line">    <span class="keyword">player_list_t</span> player_manager;</div><div class="line">&#125; <span class="keyword">room_t</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_user_enter</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_user_leave</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="keyword">player_list_t</span> room_get_all_user(<span class="keyword">room_t</span> * room);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_print_users</span><span class="params">(<span class="keyword">room_t</span> * room)</span></span>;</div></pre></td></tr></table></figure>
+<p>这样，我们实现了简单的房间，并定义了三个基本的接口，玩家进入，玩家退出，获取所有玩家。这里我们暂且用 list 来存放玩家。玩家进入的时候，通过调用 <code>room_user_enter</code> 将玩家的指针地址存放进 <code>player_manager</code>，退出的时候通过调用 <code>room_user_leave</code> 删除。同时我们定义了一个用于调试的函数 <code>room_print_users</code>，此函数简单的把当前场景的所有玩家的标示打印出来。</p>
+<p>这样，我们简单的把场景弄出来了，但是还有很多要做的。实现了进入场景，进入之后，需要告知现有玩家，有新玩家进入；需要告知新玩家，当前有哪些玩家。告知现有玩家有新玩家进入，对应的，有告知现有玩家有玩家退出。于是我们定义了三个辅助函数。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_enter_newcomer</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_leave_player</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_newcomer_others</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div></pre></td></tr></table></figure>
+<p>分别是告知进入新玩家；告知有玩家离开；告知新玩家当前房间有哪些玩家。</p>
+<p>游戏中，我们把玩家叫做人，但是有一种人，跟玩家虽然也像但是性质完全不同，他们不是具体的人控制，而是程序控制，我们称之为 npc。npc 跟玩家一样在房间内。为了区别于玩家，我们给了另外一个容器。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="keyword">list_t</span> <span class="keyword">npc_list_t</span>;</div></pre></td></tr></table></figure>
+<p>定义了另外一个接口，告知新进玩家，周围的 npc 信息。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_newcomer_npcs</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div></pre></td></tr></table></figure>
+<p>我们不需要告知 npc 新进了玩家，因为 npc 对玩家无所不知，只要想知道就能知道。</p>
+<p>另外我们的房间也不仅仅有 npc，还有其他各种不属于这两种的东西，但是做法是一样的，所以不再废话。</p>
+<p>OK，到目前，我们把一个房间实现的差不多了。可以进玩家，退玩家；进出玩家能通知到其他人；新进玩家可以知道各种房间内的信息。至于房间是不是有容量限制……笑，都是一个点了，还有什么限制。</p>
+<h2 id="如何管理房间">如何管理房间</h2>
+<p>我们的房间</p>
+]]></content>
+      
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[Hello World]]></title>
+      <url>https://blog.codingtime.org/2017/03/29/hello-world/</url>
+      <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="create-a-new-post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="run-server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="generate-static-files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+]]></content>
+      
+        
+    </entry>
+    
+  
+  
+</search>
