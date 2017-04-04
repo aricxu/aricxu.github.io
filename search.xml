@@ -21,9 +21,32 @@
 <p>另外我们的房间也不仅仅有 npc，还有其他各种不属于这两种的东西，但是做法是一样的，所以不再废话。</p>
 <p>OK，到目前，我们把一个房间实现的差不多了。可以进玩家，退玩家；进出玩家能通知到其他人；新进玩家可以知道各种房间内的信息。至于房间是不是有容量限制……笑，都是一个点了，还有什么限制。</p>
 <h2 id="如何管理房间">如何管理房间</h2>
-<p>我们的房间</p>
+<p>我们的房间不会只有一个，我们可以也搞一个<code>list</code>来管理房间。但是这样还不够，因为房间不是孤立的，我们需要把它们之间的关系，也就就是怎样连通的表达出来。于是我们将采用链表来表示。修改<code>room_t</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">list_t</span> <span class="keyword">room_list_t</span>;</div><div class="line"><span class="keyword">room_list_t</span> room_list;</div><div class="line"></div><div class="line"><span class="keyword">enum</span> room_index &#123;SOUTH = <span class="number">0</span>, EAST, NORTH, WEST&#125;;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> room_s &#123;</div><div class="line">    <span class="keyword">player_list_t</span> player_manager;</div><div class="line">    <span class="keyword">struct</span> room_s * next_room[<span class="number">4</span>];       <span class="comment">// 四个方向</span></div><div class="line">&#125; <span class="keyword">room_t</span>;</div></pre></td></tr></table></figure>
+<p>我们默认一个房间最多有四个门。不存在的门用空指针表示。玩家的出生的第一个房间，我们取一个特别的名字 <code>guide_room</code>。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">room_t</span> guide_room;</div></pre></td></tr></table></figure>
+<p>先来创建一个简单的房间，忽略其中的 <code>downtown</code>。并且 <code>room_t</code> 新加了一个属性 <code>name</code> 来表示房间名。</p>
+<blockquote>
+<pre><code>    downtown -- healing_room
+                    |
+                    |
+  learning_room -- trainning_room -- downtown
+      |
+      |
+  guide_room</code></pre>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> room_s &#123;</div><div class="line">    <span class="keyword">char</span> name[<span class="number">128</span>];                     <span class="comment">// 名字</span></div><div class="line">    <span class="keyword">player_list_t</span> player_manager;</div><div class="line">    <span class="keyword">struct</span> room_s * next_room[<span class="number">4</span>];       <span class="comment">// 四个方向</span></div><div class="line">&#125; <span class="keyword">room_t</span>;</div></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">room_t</span> * create_room(<span class="keyword">char</span> name[])</div><div class="line">&#123;</div><div class="line">    <span class="keyword">room_t</span> * room = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">room_t</span>));</div><div class="line">    <span class="built_in">memset</span>(room, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">room_t</span>));</div><div class="line">    <span class="built_in">strncpy</span>(room-&gt;name, name, <span class="keyword">sizeof</span>(room-&gt;name) - <span class="number">1</span>);</div><div class="line">    <span class="keyword">return</span> room;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">create_rooms</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">room_t</span> * guide_room, learning_room, trainning_room, healing_room;</div><div class="line">    guide_room = create_room(<span class="string">"guide"</span>);</div><div class="line">    learning_room = create_room(<span class="string">"learning"</span>);</div><div class="line">    trainning_room = create_room(<span class="string">"trainning"</span>);</div><div class="line">    healing_room = create_room(<span class="string">"healing"</span>);</div><div class="line"></div><div class="line">    guide_room-&gt;next_room[NORTH] = learning_room;</div><div class="line">    learning_room-&gt;next_room[EAST] = trainning_room;</div><div class="line">    trainning_room-&gt;next_room[NORTH] = healing_room;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="优化房间管理">优化房间管理</h2>
+<p>在上一部分，我们完成了简单的房间管理，实现了一个简单的多房间地图。</p>
 ]]></content>
       
+        
+        <tags>
+            
+            <tag> 场景管理 </tag>
+            
+        </tags>
         
     </entry>
     

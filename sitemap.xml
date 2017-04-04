@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.codingtime.org/2017/03/29/How-to-design-a-game-secene-manager/</loc>
+    
+    <lastmod>2017-03-31T12:18:54.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.codingtime.org/tags/index.html</loc>
     
     <lastmod>2017-03-29T17:59:42.000Z</lastmod>
@@ -19,13 +26,6 @@
     <loc>https://blog.codingtime.org/about/index.html</loc>
     
     <lastmod>2017-03-28T17:52:05.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://blog.codingtime.org/2017/03/29/How-to-design-a-game-secene-manager/</loc>
-    
-    <lastmod>2017-03-28T17:32:56.000Z</lastmod>
     
   </url>
   
