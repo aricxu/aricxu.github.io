@@ -34,22 +34,25 @@
 <link rel="canonical" href="https://blog.codingtime.org/2017/03/29/How-to-design-a-game-secene-manager/"/>
 
 
-<meta name="description" content="如何设计一个房间
+<meta name="description" content="从房间说起
+如何设计一个房间
 我们从最简单的做起，先把场景认为是一个点，只有玩家，没有其他。换成现实中的场景就是一个很小的房间，玩家进入后可以看到所有东西，不需要走动。做法就是，在房间里面开辟一个空间——现实中的地面，存放玩家，玩家进来就直接进入到地面上，不会在墙上，天花板下。参考代码如下：
-12345678910111213141516typedef struct player_s &amp;#123;    in">
+12345678910111213141516typedef struct player_s &amp;#123;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="场景设计（服务端篇）">
 <meta property="og:url" content="https://blog.codingtime.org/2017/03/29/How-to-design-a-game-secene-manager/index.html">
 <meta property="og:site_name" content="游码戏路">
-<meta property="og:description" content="如何设计一个房间
+<meta property="og:description" content="从房间说起
+如何设计一个房间
 我们从最简单的做起，先把场景认为是一个点，只有玩家，没有其他。换成现实中的场景就是一个很小的房间，玩家进入后可以看到所有东西，不需要走动。做法就是，在房间里面开辟一个空间——现实中的地面，存放玩家，玩家进来就直接进入到地面上，不会在墙上，天花板下。参考代码如下：
-12345678910111213141516typedef struct player_s &amp;#123;    in">
+12345678910111213141516typedef struct player_s &amp;#123;">
 <meta property="og:updated_time" content="2017-03-31T12:18:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="场景设计（服务端篇）">
-<meta name="twitter:description" content="如何设计一个房间
+<meta name="twitter:description" content="从房间说起
+如何设计一个房间
 我们从最简单的做起，先把场景认为是一个点，只有玩家，没有其他。换成现实中的场景就是一个很小的房间，玩家进入后可以看到所有东西，不需要走动。做法就是，在房间里面开辟一个空间——现实中的地面，存放玩家，玩家进来就直接进入到地面上，不会在墙上，天花板下。参考代码如下：
-12345678910111213141516typedef struct player_s &amp;#123;    in">
+12345678910111213141516typedef struct player_s &amp;#123;">
 
 
 <link rel="stylesheet" type="text/css" href="/css/style.css?v=2.3.x" />
@@ -247,27 +250,28 @@
   <div class="post-toc" id="post-toc">
     <h2 class="post-toc-title">文章目录</h2>
     <div class="post-toc-content">
-      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何设计一个房间"><span class="toc-text">如何设计一个房间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何管理房间"><span class="toc-text">如何管理房间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化房间管理"><span class="toc-text">优化房间管理</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#从房间说起"><span class="toc-text">从房间说起</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何设计一个房间"><span class="toc-text">如何设计一个房间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#如何管理房间"><span class="toc-text">如何管理房间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#优化房间管理"><span class="toc-text">优化房间管理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#跳出房间"><span class="toc-text">跳出房间</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#扩展房间"><span class="toc-text">扩展房间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#房间变形"><span class="toc-text">房间变形</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#注意事项"><span class="toc-text">注意事项</span></a></li></ol>
     </div>
   </div>
 
 
     <div class="post-content">
       
-        <h2 id="如何设计一个房间">如何设计一个房间</h2>
+        <h1 id="从房间说起">从房间说起</h1>
+<h2 id="如何设计一个房间">如何设计一个房间</h2>
 <p>我们从最简单的做起，先把场景认为是一个点，只有玩家，没有其他。换成现实中的场景就是一个很小的房间，玩家进入后可以看到所有东西，不需要走动。做法就是，在房间里面开辟一个空间——现实中的地面，存放玩家，玩家进来就直接进入到地面上，不会在墙上，天花板下。参考代码如下：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> player_s &#123;</div><div class="line">    <span class="keyword">int32_t</span> uid;</div><div class="line">&#125; <span class="keyword">player_t</span>;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> list_s <span class="keyword">list_t</span>;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">list_t</span> <span class="keyword">player_list_t</span>;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> room_s &#123;</div><div class="line">    <span class="keyword">player_list_t</span> player_manager;</div><div class="line">&#125; <span class="keyword">room_t</span>;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_user_enter</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_user_leave</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="keyword">player_list_t</span> room_get_all_user(<span class="keyword">room_t</span> * room);</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_print_users</span><span class="params">(<span class="keyword">room_t</span> * room)</span></span>;</div></pre></td></tr></table></figure>
 <p>这样，我们实现了简单的房间，并定义了三个基本的接口，玩家进入，玩家退出，获取所有玩家。这里我们暂且用 list 来存放玩家。玩家进入的时候，通过调用 <code>room_user_enter</code> 将玩家的指针地址存放进 <code>player_manager</code>，退出的时候通过调用 <code>room_user_leave</code> 删除。同时我们定义了一个用于调试的函数 <code>room_print_users</code>，此函数简单的把当前场景的所有玩家的标示打印出来。</p>
 <p>这样，我们简单的把场景弄出来了，但是还有很多要做的。实现了进入场景，进入之后，需要告知现有玩家，有新玩家进入；需要告知新玩家，当前有哪些玩家。告知现有玩家有新玩家进入，对应的，有告知现有玩家有玩家退出。于是我们定义了三个辅助函数。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_enter_newcomer</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_leave_player</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_newcomer_others</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div></pre></td></tr></table></figure>
 <p>分别是告知进入新玩家；告知有玩家离开；告知新玩家当前房间有哪些玩家。</p>
-<p>游戏中，我们把玩家叫做人，但是有一种人，跟玩家虽然也像但是性质完全不同，他们不是具体的人控制，而是程序控制，我们称之为 npc。npc 跟玩家一样在房间内。为了区别于玩家，我们给了另外一个容器。</p>
+<p>游戏中，我们把玩家叫做人，但是有一种人，跟玩家虽然也像但是性质完全不同，他们不是具体的人控制，而是程序控制，我们称之为 <code>npc</code>。<code>npc</code> 跟玩家一样在房间内。为了区别于玩家，我们给了另外一个容器。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="keyword">list_t</span> <span class="keyword">npc_list_t</span>;</div></pre></td></tr></table></figure>
-<p>定义了另外一个接口，告知新进玩家，周围的 npc 信息。</p>
+<p>定义了另外一个接口，告知新进玩家，周围的 <code>npc</code> 信息。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">room_tell_newcomer_npcs</span><span class="params">(<span class="keyword">room_t</span> * room, <span class="keyword">player_t</span> * player)</span></span>;</div></pre></td></tr></table></figure>
-<p>我们不需要告知 npc 新进了玩家，因为 npc 对玩家无所不知，只要想知道就能知道。</p>
-<p>另外我们的房间也不仅仅有 npc，还有其他各种不属于这两种的东西，但是做法是一样的，所以不再废话。</p>
-<p>OK，到目前，我们把一个房间实现的差不多了。可以进玩家，退玩家；进出玩家能通知到其他人；新进玩家可以知道各种房间内的信息。至于房间是不是有容量限制……笑，都是一个点了，还有什么限制。</p>
+<p>我们不需要告知 <code>npc</code> 新进了玩家，因为 <code>npc</code> 对玩家无所不知，只要想知道就能知道。</p>
+<p>另外我们的房间也不仅仅有 <code>npc</code>，还有其他各种不属于这两种的东西，但是做法是一样的，所以不再废话。</p>
+<p>好的，到目前，我们把一个房间实现的差不多了。可以进玩家，退玩家；进出玩家能通知到其他人；新进玩家可以知道各种房间内的信息。至于房间是不是有容量限制……笑，都是一个点了，还有什么限制。</p>
 <h2 id="如何管理房间">如何管理房间</h2>
 <p>我们的房间不会只有一个，我们可以也搞一个<code>list</code>来管理房间。但是这样还不够，因为房间不是孤立的，我们需要把它们之间的关系，也就就是怎样连通的表达出来。于是我们将采用链表来表示。修改<code>room_t</code>。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">list_t</span> <span class="keyword">room_list_t</span>;</div><div class="line"><span class="keyword">room_list_t</span> room_list;</div><div class="line"></div><div class="line"><span class="keyword">enum</span> room_index &#123;SOUTH = <span class="number">0</span>, EAST, NORTH, WEST&#125;;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> room_s &#123;</div><div class="line">    <span class="keyword">player_list_t</span> player_manager;</div><div class="line">    <span class="keyword">struct</span> room_s * next_room[<span class="number">4</span>];       <span class="comment">// 四个方向</span></div><div class="line">&#125; <span class="keyword">room_t</span>;</div></pre></td></tr></table></figure>
@@ -288,7 +292,13 @@
 <p>构造场景，先创建房间，然后把房间连起来。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">room_t</span> * create_room(<span class="keyword">char</span> name[])</div><div class="line">&#123;</div><div class="line">    <span class="keyword">room_t</span> * room = <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">room_t</span>));</div><div class="line">    <span class="built_in">memset</span>(room, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">room_t</span>));</div><div class="line">    <span class="built_in">strncpy</span>(room-&gt;name, name, <span class="keyword">sizeof</span>(room-&gt;name) - <span class="number">1</span>);</div><div class="line">    <span class="keyword">return</span> room;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">init_rooms</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">room_t</span> * guide_room, * learning_room, * trainning_room, * healing_room;</div><div class="line">    guide_room = create_room(<span class="string">"guide"</span>);</div><div class="line">    learning_room = create_room(<span class="string">"learning"</span>);</div><div class="line">    trainning_room = create_room(<span class="string">"trainning"</span>);</div><div class="line">    healing_room = create_room(<span class="string">"healing"</span>);</div><div class="line"></div><div class="line">    guide_room-&gt;next_room[NORTH] = learning_room;</div><div class="line">    learning_room-&gt;next_room[EAST] = trainning_room;</div><div class="line">    trainning_room-&gt;next_room[NORTH] = healing_room;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="优化房间管理">优化房间管理</h2>
-<p>在上一部分，我们完成了简单的房间管理，实现了一个简单的多房间地图。</p>
+<p>在上一部分，我们完成了简单的房间管理，实现了一个简单的多房间地图。但是我们是硬编码的，这样是不好的。此小节，我们尝试配置化房间生成。</p>
+<h1 id="跳出房间">跳出房间</h1>
+<h2 id="扩展房间">扩展房间</h2>
+<p>上面我们的房间是没有大小的，在房间很小的时候，我们无视大小，是可以的。但是房间可以是比较大，可是是当我们进入房间的时候，没法一眼看完所有的，我们进入的时候只是在门口的，然后可以走到房间里面其他位置的。也就是，我们必须扩展房间，加上表示大小，表示位置的。同时，我们需要修改人物，确定一个人物的位置，不再只需要房间号了。</p>
+<h2 id="房间变形">房间变形</h2>
+<p>世间的房间千千万万，形态也是各种各样。游戏世界是对现实世界的模拟。房间也是各种各样的，甚至有些看着不像房间的也是房间。比如我们到现在还没实现的 <code>downtown</code> ，它是野外，本可以包括很多个房间，不过我们这里简单的认为它就是现实中的野外，没有房间的那种。其实，它也是房间，你可以认为它是没有围墙，没有屋顶的房间。为了使得我们的代码看起来不是很怪，我们重新定义几个概念。</p>
+<h1 id="注意事项">注意事项</h1>
 
       
     </div>
