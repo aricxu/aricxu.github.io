@@ -284,7 +284,7 @@
 <p>这里的配置很简单，只有一个名字，但是之后我们可以一直扩展此配置类来更好的生成房间。比如我们可以配置这个房间能容纳多少人，不再是无限的了。</p>
 <h1 id="跳出房间">跳出房间</h1>
 <h2 id="扩展房间">扩展房间</h2>
-<p>上面我们的房间是没有大小的，在房间很小的时候，我们无视大小，是可以的。但是房间可以是比较大，可是是当我们进入房间的时候，没法一眼看完所有的，我们进入的时候只是在门口的，然后可以走到房间里面其他位置的。也就是，我们必须扩展房间，加上表示大小，表示位置的。同时，我们需要修改人物，确定一个人物的位置，不再只需要房间号了。</p>
+<p>上面我们的房间没有大小，在房间很小的时候，我们无视大小，是可以的。但是房间可以是比较大，当我们进入房间的时候，没法一眼看完所有，我们只是在门口，不过可以走到房间里面其他位置的。也就是，我们必须扩展房间，加上参数表示大小，表示位置。同时，我们需要修改人物，确定一个人物的位置，不再只需要房间号了。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> player_s &#123;</div><div class="line">    <span class="keyword">char</span> name[<span class="number">128</span>];     <span class="comment">// 名字</span></div><div class="line">    <span class="keyword">int32_t</span> uid;</div><div class="line">    <span class="keyword">int32_t</span> x;</div><div class="line">    <span class="keyword">int32_t</span> y;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> room_s &#123;</div><div class="line">    <span class="keyword">char</span> name[<span class="number">128</span>];</div><div class="line">    <span class="keyword">int32_t</span> id;</div><div class="line">    <span class="keyword">int32_t</span> x;</div><div class="line">    <span class="keyword">int32_t</span> y;</div><div class="line">    <span class="keyword">int32_t</span> width;</div><div class="line">    <span class="keyword">int32_t</span> height;</div><div class="line">    <span class="keyword">player_list_t</span> player_manager;</div><div class="line">    <span class="keyword">struct</span> room_s * next_room[<span class="number">4</span>];       <span class="comment">// 四个方向</span></div><div class="line">&#125; <span class="keyword">room_t</span>;</div></pre></td></tr></table></figure>
 <h2 id="房间变形">房间变形</h2>
@@ -294,57 +294,6 @@
 <p>这是游戏分享的第一篇，简单的介绍场景设计，如何设计场景。后面会挑几个游戏的源码进行分析。最后会讲性能分析以及优化。</p>
 <p>文件内容会随时修改。</p>
 <p>欢迎你提出批评建议👏。</p>
-
-        
-      
-    </div>
-
-    
-
-    
-
-  </article>
-
-    
-      
-  <article class="post">
-    <header class="post-header">
-      <h1 class="post-title">
-        
-          <a class="post-link" href="/2017/03/29/hello-world/">Hello World</a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <span class="post-time">
-          2017年3月29日
-        </span>
-      </div>
-    </header>
-
-    
-    
-
-    <div class="post-content">
-      
-        
-        
-
-        
-          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="quick-start">Quick Start</h2>
-<h3 id="create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="deploy-to-remote-sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
 
         
       
