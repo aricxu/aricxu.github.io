@@ -5,7 +5,7 @@
     
     <entry>
       <title><![CDATA[场景设计（服务端篇）]]></title>
-      <url>https://blog.codingtime.org/2017/03/29/How-to-design-a-game-secene-manager/</url>
+      <url>https://blog.codingtime.org/2017/03/29/How-to-design-a-game-scene-manager/</url>
       <content type="html"><![CDATA[<h1 id="从房间说起">从房间说起</h1>
 <h2 id="如何设计一个房间">如何设计一个房间</h2>
 <p>我们从最简单的做起，先把场景认为是一个点，只有玩家，没有其他。换成现实中的场景就是一个很小的房间，玩家进入后可以看到所有东西，不需要走动。做法就是，在房间里面开辟一个空间——现实中的地面，存放玩家，玩家进来就直接进入到地面上，不会在墙上，天花板下。参考代码如下：</p>
