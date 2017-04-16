@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.codingtime.org/2017/04/17/TrinityCore-game-maps/</loc>
+    
+    <lastmod>2017-04-16T16:35:38.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.codingtime.org/2017/03/29/How-to-design-a-game-scene-manager/</loc>
     
     <lastmod>2017-03-31T12:18:54.000Z</lastmod>

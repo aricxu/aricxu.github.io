@@ -4,6 +4,21 @@
   
     
     <entry>
+      <title><![CDATA[源码阅读 —— TrinityCore game maps]]></title>
+      <url>https://blog.codingtime.org/2017/04/17/TrinityCore-game-maps/</url>
+      <content type="html"><![CDATA[<p>之前<a href="/2017/03/29/How-to-design-a-game-scene-manager/">文章</a>介绍了怎么完成一个场景，这是比较想当然的做法，也不知道此做法是否可以。因此对一些开源代码进行阅读，看人家是怎么做的，有什么东西是需要考虑的。此篇将会对我阅读 <code>TrinityCore</code> 中的场景管理部分进行总结，探讨。为后续项目做一些技术积累。</p>
+]]></content>
+      
+        
+        <tags>
+            
+            <tag> 场景管理 源码阅读 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[场景设计（服务端篇）]]></title>
       <url>https://blog.codingtime.org/2017/03/29/How-to-design-a-game-scene-manager/</url>
       <content type="html"><![CDATA[<h1 id="从房间说起">从房间说起</h1>
